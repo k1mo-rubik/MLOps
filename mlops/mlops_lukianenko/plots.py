@@ -1,29 +1,23 @@
-from pathlib import Path
-
-import typer
-from loguru import logger
-from tqdm import tqdm
-
-from mlops_lukianenko.config import FIGURES_DIR, PROCESSED_DATA_DIR
-
-app = typer.Typer()
+from random import random
+import matplotlib.pyplot as plt
 
 
-@app.command()
-def main(
-    # ---- REPLACE DEFAULT PATHS AS APPROPRIATE ----
-    input_path: Path = PROCESSED_DATA_DIR / "dataset.csv",
-    output_path: Path = FIGURES_DIR / "plot.png",
-    # -----------------------------------------
-):
-    # ---- REPLACE THIS WITH YOUR OWN CODE ----
-    logger.info("Generating plot from data...")
-    for i in tqdm(range(10), total=10):
-        if i == 5:
-            logger.info("Something happened for iteration 5.")
-    logger.success("Plot generation complete.")
-    # -----------------------------------------
+def show_random_classes(train_dataset, n=3):
+    # Создаем фигуру для отображения
+    fig, axes = plt.subplots(n, n, figsize=(10, 10))
 
+    # Отображаем 9 изображений
+    for i, ax in enumerate(axes.flatten()):
+        # Извлекаем изображение и класс
+        img, label = train_dataset[i]  # используем индексы для выборки данных
 
-if __name__ == "__main__":
-    app()
+        # Отображаем изображение
+        ax.imshow(img.permute(1, 2, 0))  # Переставляем оси для отображения
+        ax.axis('off')  # Отключаем оси
+
+        # Подпись с названием класса (используем dataset.classes для получения классов)
+        ax.set_title(train_dataset.dataset.classes[label])
+
+    # Отображаем все изображения
+    plt.tight_layout()
+    plt.show()
