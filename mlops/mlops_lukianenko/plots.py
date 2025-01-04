@@ -21,3 +21,7 @@ def show_random_classes(train_dataset, n=3):
     # Отображаем все изображения
     plt.tight_layout()
     plt.show()
+
+
+def show_train_diagr():
+    return None

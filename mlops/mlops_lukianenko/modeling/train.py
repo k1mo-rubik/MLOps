@@ -1,11 +1,6 @@
 import torch
 
 
-def freeze_params(pretrained_model):
-    for param in pretrained_model.parameters():
-        param.requires_grad = False
-
-
 def swap_head(pretrained_model, num_classes):
     pretrained_model.fc = torch.nn.Sequential(
         torch.nn.Linear(pretrained_model.fc.in_features, 512),
@@ -15,9 +10,15 @@ def swap_head(pretrained_model, num_classes):
     )
 
 
+def freeze_params(pretrained_model):
+    for param in pretrained_model.parameters():
+        param.requires_grad = False
+
+
 def train_freezed(pretrained_model, num_epochs, train_loader, test_loader, device, loss_fn, optimizer, scheduler):
     train_mode_label = "Freezed training"
-    train_process(num_epochs, pretrained_model, train_mode_label, train_loader, test_loader, device, loss_fn, optimizer, scheduler)
+    train_process(num_epochs, pretrained_model, train_mode_label, train_loader, test_loader, device, loss_fn, optimizer,
+                  scheduler)
 
 
 def unfreeze(pretrained_model):
@@ -26,7 +27,16 @@ def unfreeze(pretrained_model):
         param.requires_grad = True
 
 
-def train_process(num_epochs, pretrained_model, train_mode_label, train_loader, test_loader, device, loss_fn, optimizer, scheduler):
+def train_fine_tune(num_epochs, pretrained_model, train_loader, test_loader, device, loss_fn, optimizer, scheduler):
+    pretrained_model.train()
+    train_mode_label = 'Fine-Tuning'
+
+    train_process(num_epochs, pretrained_model, train_mode_label, train_loader, test_loader, device, loss_fn, optimizer,
+                  scheduler)
+
+
+def train_process(num_epochs, pretrained_model, train_mode_label, train_loader, test_loader, device, loss_fn, optimizer,
+                  scheduler):
     for epoch in range(num_epochs):
         print(f"{train_mode_label} Epoch {epoch + 1}/{num_epochs}")
         pretrained_model.train()  # Устанавливаем режим тренировки
@@ -46,24 +56,17 @@ def train_process(num_epochs, pretrained_model, train_mode_label, train_loader, 
 
             running_loss += loss.item()
         print(f"{train_mode_label} Training loss: {running_loss / len(train_loader)}")
-        # Оценка на тестовой выборке
-        test_metrix(pretrained_model,test_loader,device)
 
-        print(f"Fine-Tuning")
         # Шаг изменения скорости обучения
         scheduler.step()
 
-
-def train_fine_tune(num_epochs, pretrained_model, train_loader, test_loader, device, loss_fn, optimizer, scheduler):
-    pretrained_model.train()
-    train_mode_label = 'Fine-Tuning'
-
-    train_process(num_epochs, pretrained_model, train_mode_label, train_loader, test_loader, device, loss_fn, optimizer, scheduler)
+        # Оценка на тестовой выборке
+        pretrained_model.eval()  # Устанавливаем режим оценки
+        test_metrix(pretrained_model, test_loader, device)
 
 
 def test_metrix(pretrained_model, test_loader, device):
     # Оценка на тестовой выборке
-    pretrained_model.eval()  # Устанавливаем режим оценки
     correct = 0
     total = 0
     with torch.no_grad():
