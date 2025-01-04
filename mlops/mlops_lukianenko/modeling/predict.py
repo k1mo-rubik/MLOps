@@ -5,7 +5,7 @@ from torchvision.transforms import transforms
 import matplotlib.pyplot as plt
 
 
-def predict(random_image_path, device, pretrained_model, train_dataset):
+def predict(random_image_path, device, pretrained_model):
     # Загрузка изображения
     image = Image.open(random_image_path)
     # Определение трансформаций для тестовых данных
@@ -29,7 +29,9 @@ def predict(random_image_path, device, pretrained_model, train_dataset):
         _, predicted_class = torch.max(output, 1)
 
     # Получение имени класса
-    predicted_label = train_dataset.dataset.classes[predicted_class.item()]
+
+    classes = ['автобус', 'автомобиль', 'грузовик', 'мотоцикл']
+    predicted_label = classes[predicted_class.item()]
     # Вывод изображения и предсказания
     plt.imshow(image)
     plt.title(f"Предсказание: {predicted_label}")

@@ -1,20 +1,25 @@
 black
 flake8
 isort
-loguru
+loguru~=0.7.3
 mkdocs
-python-dotenv
-tqdm
+python-dotenv~=1.0.1
+tqdm~=4.67.1
 typer
 timm
-Pillow
-matplotlib
+Pillow~=11.1.0
+matplotlib~=3.10.0
 numpy
-requests
+requests~=2.32.3
 duckduckgo-search
-torch
-torchvision
+torch~=2.5.1+cu124
+torchvision~=0.20.1+cu124
 torchaudio
 -f https://download.pytorch.org/whl/cu124
 jupyter
+onnx
+onnxruntime
+onnxruntime-gpu
 -e .
+
+duckduckgo_search~=7.2.0
