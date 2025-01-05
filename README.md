@@ -17,8 +17,8 @@
 1. **Клонирование репозитория**:
 
    ```bash
-   git clone <URL вашего репозитория>
-   cd <имя директории>
+   git clone https://github.com/k1mo-rubik/MLOps.git
+   cd mlops
    ```
 
 2. **Создание виртуального окружения (опционально)**:
@@ -39,7 +39,7 @@
 4. **Установка библиотек для работы с GPU в случае, если они не установились **:
 
    ```bash
-   pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
+   pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
    ```
 
 ## Запуск веб-приложения
